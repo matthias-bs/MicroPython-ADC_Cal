@@ -65,7 +65,8 @@
 
 from machine import Pin
 from machine import ADC
-    
+
+# Constants from esp_adc_cal_esp32.c
 _ADC_12_BIT_RES         = const(4096)
 _LIN_COEFF_A_SCALE      = const(65536)
 _LIN_COEFF_A_ROUND      = const(32768) # LIN_COEFF_A_SCALE/2
@@ -146,8 +147,9 @@ class ADC1Cal:
         
         raw_val = self._adc.read()
         
-        return ("{}Pin# {:2}, Pin# empty: {:2}, raw value: {}, value: {}"
-                .format(name_str, self._pin, raw_val, self.voltage()))
+        return ("{}Pin# {:2}, raw value: {}, value: {}"
+                .format(name_str, self._pin, raw_val, self.voltage))
+
 
 from time import sleep
 
