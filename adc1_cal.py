@@ -10,7 +10,6 @@
 # Limitations of the current implementation ("works for me"):
 # - only ADC1 is supported (as the name says)
 # - only "V_ref"-calibration
-# - only ADC width: 10 bits
 # - only attenuator setting: 6 dB
 #
 # For a full discussion of the three different calibration options see [1]
