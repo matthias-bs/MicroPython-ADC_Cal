@@ -11,13 +11,31 @@ The following restrictions apply:
 
 `ADC1Cal` extends MicroPython's ESP32 `machine.ADC` class. Please refer to the [MicroPython ESP32 ADC documentation](https://docs.micropython.org/en/latest/esp32/quickref.html#adc-analog-to-digital-conversion) for methods and attributes inherited from the `ADC` class.
 
-Example usage:
+    Attributes:
+        name (string):      instance name (for debugging
+        vref (int):         ADC reference voltage in mV (from efuse calibration data or supplied by programmer)
+
+    Methods:
+        @property
+        voltage()
+            Get voltage measurement [mV]
+
+            Returns:
+                float: voltage [mV]
+        
+        __str__()
+            Dump object info as a string
+            
+            Returns:
+                string: "Name: <n>  width: <w>, attenuation: <a>, raw value: <raw>, value: <voltage>"
+
+**Usage example:**
 
         from machine import Pin
         import adc1_cal
         
         ADC_PIN   = 35                # ADC input pin no.
-        DIV       = 1                 # no input devider - voltage to be measured is directly connected to analog input
+        DIV       = 1                 # div = V_measured / V_input; here: no input divider
         AVERAGING = 10                # no. of samples for averaging (10 si default)
         
         # vref = None -> V_ref calibration value is read from efuse
