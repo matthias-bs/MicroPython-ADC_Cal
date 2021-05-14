@@ -3,7 +3,7 @@
 
 ***Please refer to ESP32 documentation for maximum ADC input voltage ratings!!!***
 
-The [Espressif IDF API Reference](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/adc.html) describes the limitations of the ESP32's built-in analog-to-digital converter - and provides a (partial) solution in terms of providing a method for improving it's accuracy by using a chip specific calibration value (or two calibration values, respectively) stored in the efuse. It also provides useful information regarding *noise mitigation* and the *suggested range* of input voltages in each mode.
+The [Espressif IDF API Reference](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/adc.html) describes the limitations of the ESP32's built-in analog-to-digital converter - and provides a (partial) solution in terms of providing a method for improving its accuracy by using a chip specific calibration value (or two calibration values, respectively) stored in the efuse. It also provides useful information regarding *noise mitigation* and the *suggested range* of input voltages in each mode.
 
 This [ADC calibration scheme](https://github.com/espressif/esp-idf/blob/master/components/esp_adc_cal/esp_adc_cal_esp32.c) is (in parts) provided by the ADC1Cal class.
 
