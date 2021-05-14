@@ -9,6 +9,6 @@ The following restrictions apply:
 * Attenuation mode 11 dB is currently not supported<br>(In this mode, more effort in termes of programming is required and more memory would be needed.)
 * Only V_ref calibration mode is supported<br>(This is due to the fact that the author does not have a proper ESP32 device to test two point calibration mode.)
 
-ADC1Cal extends MicroPython's ESP32 machine.ADC class.
+`ADC1Cal` extends MicroPython's ESP32 `machine.ADC` class.
 
 Example usage:
