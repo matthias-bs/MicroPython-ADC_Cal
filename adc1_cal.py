@@ -10,11 +10,14 @@
 # Limitations of the current implementation ("works for me"):
 # - only ADC1 is supported (as the name says)
 # - only "V_ref"-calibration
-# - only attenuator setting: 6 dB
+# - attenuator setting 11 dB not supported
+#   (in this mode the characteristic is partly non-linear, thus calibration
+#   works in different and needs more memory)
 #
 # For a full discussion of the three different calibration options see [1]
 #
-# The V_ref calibration value can be read with the tool espefuse.py [1], e.g.:
+# The V_ref calibration value can be read with the tool espefuse.py [1]
+# Example:
 # $ espefuse.py --port <port> adc_info
 # Detecting chip type... ESP32
 # espefuse.py v3.0
@@ -30,8 +33,29 @@
 # - "Per design the ADC reference voltage is 1100 mV, however the true
 #   reference voltage can range from 1000 mV to 1200 mV amongst different
 #   ESP32s." [1]
-# - according to [1], ESP32 provides a "suggested input range" of 150 ~ 1750mV
-#   with attenuation of 6dB.
+#
+# - Attenuation and "suggested input ranges" [1]
+#   +----------+-------------+-----------------+
+#   |          | attenuation | suggested range |
+#   |    SoC   |     (dB)    |      (mV)       |
+#   +==========+=============+=================+
+#   |          |       0     |    100 ~  950   |
+#   |          +-------------+-----------------+
+#   |          |       2.5   |    100 ~ 1250   |
+#   |   ESP32  +-------------+-----------------+
+#   |          |       6     |    150 ~ 1750   |
+#   |          +-------------+-----------------+
+#   |          |      11     |    150 ~ 2450   |
+#   +----------+-------------+-----------------+
+#   |          |       0     |      0 ~  750   |
+#   |          +-------------+-----------------+
+#   |          |       2.5   |      0 ~ 1050   |
+#   | ESP32-S2 +-------------+-----------------+
+#   |          |       6     |      0 ~ 1300   |
+#   |          +-------------+-----------------+
+#   |          |      11     |      0 ~ 2500   |
+#   +----------+-------------+-----------------+
+#
 #
 # Please refer to the section "Minimizing Noise" in [1].
 #
@@ -57,11 +81,12 @@
 #          Fixed usage example
 # 20210512 Modified class ADC1Cal to inherit from machine.ADC class
 #          All bit widths are supported now
-#          Removed rounding of the result in voltage()    
+#          Removed rounding of the result in voltage()   
+#          Added support of 0/2.5/6 dB attenuation
 #
 # ToDo:
 # - add support of "Two Point Calibration"
-# - add support of other attenuator settings
+# - add support of 11 dB attenuation
 #   (What's the point in the 11dB setting with its crooked characteristics?) 
 #
 ###############################################################################
@@ -83,8 +108,8 @@ _EFUSE_BLK0_RDATA4_REG  = (_DR_REG_EFUSE_BASE + 0x010)
 _ADC_12_BIT_RES         = const(4096)
 _LIN_COEFF_A_SCALE      = const(65536)
 _LIN_COEFF_A_ROUND      = const(32768) # LIN_COEFF_A_SCALE/2
-_ADC1_VREF_ATTEN_SCALE  = const(105481)
-_ADC1_VREF_ATTEN_OFFSET = const(107)
+_ADC1_VREF_ATTEN_SCALE  = [57431, 76236, 105481]
+_ADC1_VREF_ATTEN_OFFSET = [75, 78, 107]
 _VREF_REG               = _EFUSE_BLK0_RDATA4_REG
 _VREF_OFFSET            = const(1100)
 _VREF_STEP_SIZE         = const(7)
@@ -124,10 +149,9 @@ class ADC1Cal(machine.ADC):
         self.name     = name
         self._div     = div
         self._width   = 3
+        self._atten   = None
         self._samples = samples
         self.vref     = self.read_efuse_vref() if (vref is None) else vref
-        self._coeff_a = self.vref * _ADC1_VREF_ATTEN_SCALE / _ADC_12_BIT_RES
-        self._coeff_b = _ADC1_VREF_ATTEN_OFFSET
 
     def atten(self, attenuation):
         """
@@ -135,13 +159,16 @@ class ADC1Cal(machine.ADC):
         
         Parameter identical to ADC.atten()
         
-        Currently restricted to ADC.ATTN_6DB!
+        Currently ADC.ATTN_11DB is not supported!
 
         Parameters:
             attenuation (int): ADC.ATTN_0DB / ADC.ATTN_2_5DB / ADC.ATTN_6DB /  ADC.ATTN_11DB
         """        
-        assert (attenuation == ADC.ATTN_6DB), "Currently only ADC.ATTN_6DB is supported!"
+        assert (attenuation != ADC.ATTN_11DB), "Currently ADC.ATTN_11DB is not supported!"
         super().atten(attenuation)
+        self._coeff_a = self.vref * _ADC1_VREF_ATTEN_SCALE[attenuation] / _ADC_12_BIT_RES
+        self._coeff_b = _ADC1_VREF_ATTEN_OFFSET[attenuation]
+        self._atten = attenuation
         
     def width(self, adc_width):
         """
@@ -172,7 +199,7 @@ class ADC1Cal(machine.ADC):
         # https://github.com/espressif/esp-idf/blob/master/components/soc/esp32/include/soc/efuse_reg.h
         # EFUSE_RD_ADC_VREF : R/W ;bitpos:[12:8] ;default: 5'b0
         bits = (machine.mem32[_VREF_REG] >> 8) & _VREF_MASK
-        ret += self.decode_bits(bits, _VREF_MASK, _VREF_FORMAT) * _VREF_STEP_SIZE;
+        ret += self.decode_bits(bits, _VREF_MASK, _VREF_FORMAT) * _VREF_STEP_SIZE
         
         return ret # ADC Vref in mV
 
@@ -209,6 +236,8 @@ class ADC1Cal(machine.ADC):
         Returns:
             float: voltage [mV]
         """
+        assert (self._atten is not None), "Currently ADC.ATTN_11DB is not supported!"
+        
         raw_val = 0
         
         # Read and accumulate ADC samples
@@ -231,6 +260,7 @@ class ADC1Cal(machine.ADC):
 
     
     def __str__(self):
+        _atten = ["0dB", "2.5dB", "6dB", "11dB"]
         if (self.name != ""):
             name_str = "Name: {} ".format(self.name)
         else:
@@ -238,8 +268,8 @@ class ADC1Cal(machine.ADC):
         
         raw_val = self.read()
         
-        return ("{} raw value: {}, value: {}"
-                .format(name_str, raw_val, self.voltage))
+        return ("{} width: {:2}, attenuation: {:>5}, raw value: {:4}, value: {}"
+                .format(name_str, 9+self._width, _atten[self._atten], raw_val, self.voltage))
 
 
 from time import sleep
@@ -248,9 +278,12 @@ from machine import Pin
 if __name__ == "__main__":
     ADC_PIN   = 35                # ADC input pin no.
     VREF      = 1065              # V_ref in mV (device specific value -> espefuse.py --port <port> adc_info)
-    DIV       = 100 / (100 + 200) # (R1 / R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)  
+#    DIV       = 100 / (100 + 200) # (R1 / R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)  
+    DIV       = 1
     AVERAGING = 10                # no. of samples for averaging
-
+    
+    adc_widths = [ADC.WIDTH_9BIT, ADC.WIDTH_10BIT, ADC.WIDTH_11BIT, ADC.WIDTH_12BIT]
+    adc_atten  = [ADC.ATTN_0DB, ADC.ATTN_2_5DB, ADC.ATTN_6DB]
 
     # Using programmer-supplied calibration value
     #ubatt = ADC1Cal(Pin(ADC_PIN, Pin.IN), DIV, VREF, AVERAGING, "ADC1 User Calibrated")
@@ -258,17 +291,27 @@ if __name__ == "__main__":
     # Using efuse calibration value
     ubatt = ADC1Cal(Pin(ADC_PIN, Pin.IN), DIV, None, AVERAGING, "ADC1 eFuse Calibrated")
 
-    # Print object info
-    print(ubatt)
+    # Test all supported attenuation/width permutations
+    for attenuation in adc_atten:
+        # set attenuation
+        ubatt.atten(attenuation)
+
+        for width in adc_widths:
+            # set ADC result width
+            ubatt.width(width)
+       
+            # Print object info
+            print(ubatt)
     
-    # 6dB attenuation
-    # -> "suggested input range: 150 ~ 1750mV [1]
-    ubatt.atten(ADC.ATTN_6DB)
-        
-    # set ADC result width to 10 bits
+    # set ADC result width
     ubatt.width(ADC.WIDTH_10BIT)
     
+    # set attenuation
+    ubatt.atten(ADC.ATTN_6DB)
+    
+    print()
     print('ADC Vref: {:4}mV'.format(ubatt.vref))
+    print()
     
     while 1:
         print('Voltage:  {:4.1f}mV'.format(ubatt.voltage))
