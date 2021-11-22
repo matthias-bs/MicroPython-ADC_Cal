@@ -242,7 +242,7 @@ class ADC1Cal(machine.ADC):
     # Only call when ADC reading is above threshold
     def calculate_voltage_lut(self, adc):        
         # Get index of lower bound points of LUT
-        i = (adc - _LUT_LOW_THRESH) / _LUT_ADC_STEP_SIZE
+        i = int((adc - _LUT_LOW_THRESH) / _LUT_ADC_STEP_SIZE)
 
         # Let the X Axis be self.vref, Y axis be ADC reading, and Z be voltage
         x2dist = _LUT_VREF_HIGH - self.vref;                 # (x2 - x)
