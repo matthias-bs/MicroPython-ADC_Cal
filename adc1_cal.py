@@ -296,7 +296,8 @@ class ADC1Cal(machine.ADC):
         if self._atten == ADC.ATTN_11DB and raw_val >= _LUT_LOW_THRESH:  # Check if in non-linear region
         # Use lookup table to get voltage in non linear portion of ADC_ATTEN_DB_11
             lut_voltage = self.calculate_voltage_lut(raw_val)
-            if raw_val <= _LUT_HIGH_THRESH: # If ADC is transitioning from linear region to non-linear region
+            # If ADC is transitioning from linear region to non-linear region
+            if raw_val <= _LUT_HIGH_THRESH:
                 # Linearly interpolate between linear voltage and lut voltage
                 linear_voltage = self.calculate_voltage_linear(raw_val)
                 voltage = self.interpolate_two_points(linear_voltage, lut_voltage, _LUT_ADC_STEP_SIZE, (raw_val - _LUT_LOW_THRESH))
