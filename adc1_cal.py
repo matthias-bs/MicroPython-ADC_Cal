@@ -124,8 +124,10 @@ _LUT_LOW_THRESH         = const(2880)
 _LUT_HIGH_THRESH        = (_LUT_LOW_THRESH + _LUT_ADC_STEP_SIZE)
 
 # 20 Point lookup tables, covering ADC readings from 2880 to 4096, step size of 64
+# LUT for VREF 1000mV
 _lut_adc1_low = [2240, 2297, 2352, 2405, 2457, 2512, 2564, 2616, 2664, 2709,
                  2754, 2795, 2832, 2868, 2903, 2937, 2969, 3000, 3030, 3060]
+# LUT for VREF 1200mV
 _lut_adc1_high = [2667, 2706, 2745, 2780, 2813, 2844, 2873, 2901, 2928, 2956,
                   2982, 3006, 3032, 3059, 3084, 3110, 3135, 3160, 3184, 3209]
 
