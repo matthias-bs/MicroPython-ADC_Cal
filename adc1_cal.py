@@ -262,7 +262,7 @@ class ADC1Cal(machine.ADC):
         # Bilinear interpolation
         # Where z = 1/((x2-x1)*(y2-y1)) * ((q11*x2dist*y2dist) + (q21*x1dist*y2dist) + (q12*x2dist*y1dist) + (q22*x1dist*y1dist))
         voltage = (q11 * x2dist * y2dist) + (q21 * x1dist * y2dist) + (q12 * x2dist * y1dist) + (q22 * x1dist * y1dist);
-        # voltage += ((_LUT_VREF_HIGH - _LUT_VREF_LOW) * _LUT_ADC_STEP_SIZE) / 2; # Integer division rounding
+        voltage += ((_LUT_VREF_HIGH - _LUT_VREF_LOW) * _LUT_ADC_STEP_SIZE) / 2; # Integer division rounding
         voltage /= ((_LUT_VREF_HIGH - _LUT_VREF_LOW) * _LUT_ADC_STEP_SIZE);     # Divide by ((x2-x1)*(y2-y1))
         return voltage
 
