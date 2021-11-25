@@ -163,9 +163,10 @@ class ADC1Cal(machine.ADC):
         self.name     = name
         self._div     = div
         self._width   = 3
-        self._atten   = None
         self._samples = samples
         self.vref     = self.read_efuse_vref() if (vref is None) else vref
+        self._atten   = None
+        self.atten(ADC.ATTN_6DB)
 
     def atten(self, attenuation):
         """
@@ -251,7 +252,7 @@ class ADC1Cal(machine.ADC):
         x1dist = self.vref - _LUT_VREF_LOW;                  # (x - x1)
         y2dist = ((i + 1) * _LUT_ADC_STEP_SIZE) + _LUT_LOW_THRESH - adc;  # (y2 - y)
         y1dist = adc - ((i * _LUT_ADC_STEP_SIZE) + _LUT_LOW_THRESH);      # (y - y1)
-
+        
         # For points for bilinear interpolation
         q11 = _lut_adc1_low[i];                # Lower bound point of _lut_adc1_low
         q12 = _lut_adc1_low[i + 1];            # Upper bound point of _lut_adc1_low
@@ -261,7 +262,7 @@ class ADC1Cal(machine.ADC):
         # Bilinear interpolation
         # Where z = 1/((x2-x1)*(y2-y1)) * ((q11*x2dist*y2dist) + (q21*x1dist*y2dist) + (q12*x2dist*y1dist) + (q22*x1dist*y1dist))
         voltage = (q11 * x2dist * y2dist) + (q21 * x1dist * y2dist) + (q12 * x2dist * y1dist) + (q22 * x1dist * y1dist);
-        voltage += ((_LUT_VREF_HIGH - _LUT_VREF_LOW) * _LUT_ADC_STEP_SIZE) / 2; # Integer division rounding
+        # voltage += ((_LUT_VREF_HIGH - _LUT_VREF_LOW) * _LUT_ADC_STEP_SIZE) / 2; # Integer division rounding
         voltage /= ((_LUT_VREF_HIGH - _LUT_VREF_LOW) * _LUT_ADC_STEP_SIZE);     # Divide by ((x2-x1)*(y2-y1))
         return voltage
 
