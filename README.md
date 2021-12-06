@@ -8,7 +8,6 @@ The [Espressif IDF API Reference](https://docs.espressif.com/projects/esp-idf/en
 This [ADC calibration scheme](https://github.com/espressif/esp-idf/blob/master/components/esp_adc_cal/esp_adc_cal_esp32.c) is (in parts) provided by the ADC1Cal class.
 
 The following restrictions apply:
-* Attenuation mode 11 dB is currently not supported<br>(In this mode, more effort in terms of programming is required and more memory would be needed.)
 * Only V_ref calibration mode is supported<br>(This is due to the fact that the author does not have a proper ESP32 device to test two point calibration mode.)
 
 `ADC1Cal` extends MicroPython's ESP32 `machine.ADC` class. Please refer to the [MicroPython ESP32 ADC documentation](https://docs.micropython.org/en/latest/esp32/quickref.html#adc-analog-to-digital-conversion) for methods and attributes inherited from the `ADC` class.
