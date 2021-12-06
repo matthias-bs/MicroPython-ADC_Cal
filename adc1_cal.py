@@ -10,9 +10,6 @@
 # Limitations of the current implementation ("works for me"):
 # - only ADC1 is supported (as the name says)
 # - only "V_ref"-calibration
-# - attenuator setting 11 dB not supported
-#   (in this mode the characteristic is partly non-linear, thus calibration
-#   works in different and needs more memory)
 #
 # For a full discussion of the three different calibration options see [1]
 #
@@ -66,7 +63,7 @@
 # [3] https://docs.micropython.org/en/latest/esp32/quickref.html#adc-analog-to-digital-conversion
 # [4] https://esp32.com/viewtopic.php?t=1045 ([Answered] What are the ADC input ranges?)
 #
-# created: 04/2021 updated: 05/2021
+# created: 04/2021 updated: 12/2021
 #
 # This program is Copyright (C) 04/2021 Matthias Prinke
 # <m.prinke@arcor.de> and covered by GNU's GPL.
@@ -83,11 +80,10 @@
 #          All bit widths are supported now
 #          Removed rounding of the result in voltage()   
 #          Added support of 0/2.5/6 dB attenuation
+# 20211206 Merged pull request by codemee: added support for ATTN_11DB
 #
 # ToDo:
-# - add support of "Two Point Calibration"
-# - add support of 11 dB attenuation
-#   (What's the point in the 11dB setting with its crooked characteristics?) 
+# - add support of "Two Point Calibration" 
 #
 ###############################################################################
 
