@@ -271,7 +271,7 @@ class ADC1Cal(machine.ADC):
         """
         if (bits & ~(mask >> 1) & mask): # Check sign bit (MSB of mask)
             # Negative
-            if (is_twos_compl):
+            if is_twos_compl:
                 # 2's complement
                 ret = -(((~bits) + 1) & (mask >> 1))
             else:
@@ -284,7 +284,7 @@ class ADC1Cal(machine.ADC):
         return ret
 
     # Only call when ADC reading is above threshold
-    def calculate_voltage_lut(self, adc): 
+    def calculate_voltage_lut(self, adc):
         # Get index of lower bound points of LUT
         i = int((adc - _LUT_LOW_THRESH) / _LUT_ADC_STEP_SIZE)
 
@@ -300,21 +300,26 @@ class ADC1Cal(machine.ADC):
         
         # For points for bilinear interpolation
         # Lower bound point of _lut_adc1_low
-        q11 = _lut_adc1_low[i]  
+        q11 = _lut_adc1_low[i]
         # Upper bound point of _lut_adc1_low
         q12 = _lut_adc1_low[i + 1]
         # Lower bound point of _lut_adc1_high
         q21 = _lut_adc1_high[i]
         # Upper bound point of _lut_adc1_high
-        q22 = _lut_adc1_high[i + 1]  
+        q22 = _lut_adc1_high[i + 1]
 
         # Bilinear interpolation
         # Where z = 1/((x2-x1)*(y2-y1)) * ((q11*x2dist*y2dist) + (q21*x1dist*y2dist) + (q12*x2dist*y1dist) + (q22*x1dist*y1dist))
-        voltage = (q11 * x2dist * y2dist) + (q21 * x1dist * y2dist) + (q12 * x2dist * y1dist) + (q22 * x1dist * y1dist)
+        voltage = (
+            (q11 * x2dist * y2dist)
+            + (q21 * x1dist * y2dist)
+            + (q12 * x2dist * y1dist)
+            + (q22 * x1dist * y1dist)
+        )
         # Integer division rounding
         # voltage += ((_LUT_VREF_HIGH - _LUT_VREF_LOW) * _LUT_ADC_STEP_SIZE) / 2
         # Divide by ((x2-x1)*(y2-y1))
-        voltage /= ((_LUT_VREF_HIGH - _LUT_VREF_LOW) * _LUT_ADC_STEP_SIZE)
+        voltage /= (_LUT_VREF_HIGH - _LUT_VREF_LOW) * _LUT_ADC_STEP_SIZE
         return voltage
 
     def interpolate_two_points(self, y1, y2, x_step, x):
@@ -322,7 +327,9 @@ class ADC1Cal(machine.ADC):
         return ((y1 * x_step) + (y2 * x) - (y1 * x) + (x_step / 2)) / x_step
 
     def calculate_voltage_linear(self, raw_val):
-        voltage = (((self._coeff_a * raw_val) + _LIN_COEFF_A_ROUND) / _LIN_COEFF_A_SCALE) + self._coeff_b
+        voltage = (
+            ((self._coeff_a * raw_val) + _LIN_COEFF_A_ROUND) / _LIN_COEFF_A_SCALE
+        ) + self._coeff_b
         return voltage
 
     @property
@@ -333,7 +340,7 @@ class ADC1Cal(machine.ADC):
         Returns:
             float: voltage [mV]
         """
-        assert (self._atten is not None), "Currently ADC.ATTN_11DB is not supported!"
+        assert self._atten is not None, "Currently ADC.ATTN_11DB is not supported!"
 
         raw_val = 0
 
@@ -345,7 +352,7 @@ class ADC1Cal(machine.ADC):
         raw_val = int(round(raw_val / self._samples))
 
         # Extend result to 12 bits (required by calibration function)
-        raw_val <<= (3 - self._width)
+        raw_val <<= 3 - self._width
 
         # Check if in non-linear region
         if self._atten == ADC.ATTN_11DB and raw_val >= _LUT_LOW_THRESH: 
@@ -355,7 +362,12 @@ class ADC1Cal(machine.ADC):
             if raw_val <= _LUT_HIGH_THRESH:
                 # Linearly interpolate between linear voltage and lut voltage
                 linear_voltage = self.calculate_voltage_linear(raw_val)
-                voltage = self.interpolate_two_points(linear_voltage, lut_voltage, _LUT_ADC_STEP_SIZE, (raw_val - _LUT_LOW_THRESH))
+                voltage = self.interpolate_two_points(
+                    linear_voltage,
+                    lut_voltage,
+                    _LUT_ADC_STEP_SIZE,
+                    (raw_val - _LUT_LOW_THRESH)
+                )
             else:
                 voltage = lut_voltage
         else:
@@ -378,7 +390,7 @@ class ADC1Cal(machine.ADC):
         raw_val = self.read()
 
         return ("{} width: {:2}, attenuation: {:>5}, raw value: {:4}, value: {}".format(
-          name_str, 9+self._width, _atten[self._atten], raw_val, self.voltage)
+            name_str, 9+self._width, _atten[self._atten], raw_val, self.voltage)
         )
 
 
@@ -402,7 +414,7 @@ if __name__ == "__main__":
     adc_atten  = [ADC.ATTN_0DB, ADC.ATTN_2_5DB, ADC.ATTN_6DB, ADC.ATTN_11DB]
 
     # Using programmer-supplied calibration value
-    #ubatt = ADC1Cal(Pin(ADC_PIN, Pin.IN), DIV, VREF, AVERAGING, "ADC1 User Calibrated")
+    # ubatt = ADC1Cal(Pin(ADC_PIN, Pin.IN), DIV, VREF, AVERAGING, "ADC1 User Calibrated")
 
     # Using efuse calibration value
     ubatt = ADC1Cal(Pin(ADC_PIN, Pin.IN), DIV, None, AVERAGING, "ADC1 eFuse Calibrated")
@@ -426,9 +438,9 @@ if __name__ == "__main__":
     ubatt.atten(ADC.ATTN_6DB)
 
     print()
-    print('ADC Vref: {:4}mV'.format(ubatt.vref))
+    print("ADC Vref: {:4}mV".format(ubatt.vref))
     print()
 
     while 1:
-        print('Voltage:  {:4.1f}mV'.format(ubatt.voltage))
+        print("Voltage:  {:4.1f}mV".format(ubatt.voltage))
         sleep(5)
