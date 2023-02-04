@@ -92,6 +92,7 @@
 import machine
 from machine import ADC
 
+# fmt: off
 # Constant from
 # https://github.com/espressif/esp-idf/blob/master/components/soc/esp32/include/soc/soc.h
 _DR_REG_EFUSE_BASE      = const(0x3FF5A000)
@@ -103,7 +104,6 @@ _EFUSE_BLK0_RDATA4_REG  = _DR_REG_EFUSE_BASE + 0x010
 
 # Constants from
 # esp_adc_cal_esp32.c
-# fmt: off
 _ADC_12_BIT_RES         = const(4096)
 _LIN_COEFF_A_SCALE      = const(65536)
 # LIN_COEFF_A_SCALE/2
@@ -121,7 +121,7 @@ _LUT_ADC_STEP_SIZE      = const(64)
 _LUT_POINTS             = const(20)
 _LUT_LOW_THRESH         = const(2880)
 _LUT_HIGH_THRESH        = _LUT_LOW_THRESH + _LUT_ADC_STEP_SIZE
-#fmt: on
+# fmt: on
 
 # 20 Point lookup tables, covering ADC readings from 2880 to 4096, step size of 64
 # LUT for VREF 1000mV
@@ -229,7 +229,7 @@ class ADC1Cal(machine.ADC):
         self._coeff_a = self.vref * _ADC1_VREF_ATTEN_SCALE[attenuation] / _ADC_12_BIT_RES
         self._coeff_b = _ADC1_VREF_ATTEN_OFFSET[attenuation]
         self._atten   = attenuation
-        # fmt: off
+        # fmt: on
         
     def width(self, adc_width):
         """
