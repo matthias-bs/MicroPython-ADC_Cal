@@ -332,6 +332,7 @@ class ADC1Cal(machine.ADC):
         return ((y1 * x_step) + (y2 * x) - (y1 * x) + (x_step / 2)) / x_step
 
     def calculate_voltage_linear(self, raw_val):
+        # Apply linear correction coefficients
         voltage = (
             ((self._coeff_a * raw_val) + _LIN_COEFF_A_ROUND) / _LIN_COEFF_A_SCALE
         ) + self._coeff_b
