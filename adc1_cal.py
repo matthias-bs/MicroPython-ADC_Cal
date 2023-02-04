@@ -81,6 +81,7 @@
 #          Removed rounding of the result in voltage()
 #          Added support of 0/2.5/6 dB attenuation
 # 20211206 Merged pull request by codemee: added support for ATTN_11DB
+# 20230204 Improved coding style
 #
 # ToDo:
 # - add support of "Two Point Calibration"
@@ -92,12 +93,12 @@ from machine import ADC
 
 # Constant from
 # https://github.com/espressif/esp-idf/blob/master/components/soc/esp32/include/soc/soc.h
-_DR_REG_EFUSE_BASE      = const(0x3ff5A000)
+_DR_REG_EFUSE_BASE      = const(0x3FF5A000)
 
 # Constants from
 # https://github.com/espressif/esp-idf/blob/master/components/soc/esp32/include/soc/efuse_reg.h
 _EFUSE_ADC_VREF         = const(0x0000001F)
-_EFUSE_BLK0_RDATA4_REG  = (_DR_REG_EFUSE_BASE + 0x010)
+_EFUSE_BLK0_RDATA4_REG  = _DR_REG_EFUSE_BASE + 0x010
 
 # Constants from
 # esp_adc_cal_esp32.c
