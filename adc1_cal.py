@@ -103,6 +103,7 @@ _EFUSE_BLK0_RDATA4_REG  = _DR_REG_EFUSE_BASE + 0x010
 
 # Constants from
 # esp_adc_cal_esp32.c
+# fmt: off
 _ADC_12_BIT_RES         = const(4096)
 _LIN_COEFF_A_SCALE      = const(65536)
 # LIN_COEFF_A_SCALE/2
@@ -120,6 +121,7 @@ _LUT_ADC_STEP_SIZE      = const(64)
 _LUT_POINTS             = const(20)
 _LUT_LOW_THRESH         = const(2880)
 _LUT_HIGH_THRESH        = _LUT_LOW_THRESH + _LUT_ADC_STEP_SIZE
+#fmt: on
 
 # 20 Point lookup tables, covering ADC readings from 2880 to 4096, step size of 64
 # LUT for VREF 1000mV
@@ -201,6 +203,7 @@ class ADC1Cal(machine.ADC):
             name (string):          instance name
         """
         super().__init__(pin)
+        # fmt: off
         self.name     = name
         self._div     = div
         self._width   = 3
@@ -208,7 +211,8 @@ class ADC1Cal(machine.ADC):
         self.vref     = self.read_efuse_vref() if (vref is None) else vref
         self._atten   = None
         self.atten(ADC.ATTN_6DB)
-
+        # fmt: on
+        
     def atten(self, attenuation):
         """
         Select attenuation of input signal
@@ -221,10 +225,12 @@ class ADC1Cal(machine.ADC):
             attenuation (int): ADC.ATTN_0DB / ADC.ATTN_2_5DB / ADC.ATTN_6DB /  ADC.ATTN_11DB
         """
         super().atten(attenuation)
+        # fmt: off
         self._coeff_a = self.vref * _ADC1_VREF_ATTEN_SCALE[attenuation] / _ADC_12_BIT_RES
         self._coeff_b = _ADC1_VREF_ATTEN_OFFSET[attenuation]
-        self._atten = attenuation
-
+        self._atten   = attenuation
+        # fmt: off
+        
     def width(self, adc_width):
         """
         Select bit width of conversion result
@@ -402,20 +408,20 @@ from machine import Pin
 
 if __name__ == "__main__":
     # ADC input pin no.
-    ADC_PIN   = 35
+    ADC_PIN = 35
 
     # V_ref in mV (device specific value -> espefuse.py --port <port> adc_info)
-    VREF      = 1065
+    VREF = 1065
 
-    # DIV     = 100 / (100 + 200) # (R1 / R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)
-    DIV       = 1
+    # DIV = 100 / (100 + 200) # (R1 / R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)
+    DIV = 1
 
     # no. of samples for averaging
     AVERAGING = 10
 
     adc_widths = [ADC.WIDTH_9BIT, ADC.WIDTH_10BIT, ADC.WIDTH_11BIT, ADC.WIDTH_12BIT]
     adc_atten  = [ADC.ATTN_0DB, ADC.ATTN_2_5DB, ADC.ATTN_6DB, ADC.ATTN_11DB]
-
+    
     # Using programmer-supplied calibration value
     # ubatt = ADC1Cal(Pin(ADC_PIN, Pin.IN), DIV, VREF, AVERAGING, "ADC1 User Calibrated")
 
