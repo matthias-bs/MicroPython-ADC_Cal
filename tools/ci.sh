@@ -34,7 +34,7 @@ function ci_build_packages_setup {
     ls /tmp/micropython
     ls /tmp/micropython/mpy-cross/
     ls /tmp/micropython/mpy-cross/build
-    tmp/micropython/mpy-cross/build/mpy-cross adc1_cal.py
+    /tmp/micropython/mpy-cross/build/mpy-cross adc1_cal.py
 }
 
 function ci_build_packages_check_manifest {
