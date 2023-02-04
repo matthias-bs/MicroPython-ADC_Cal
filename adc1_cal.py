@@ -186,7 +186,7 @@ class ADC1Cal(machine.ADC):
         _coeff_a (float):   conversion function coefficient 'a'
         _coeff_b (float):   conversion function coefficient 'b'
     """
-    
+
     def __init__(self, pin, div, vref=None, samples=10, name=""):
         """
         The constructor for Battery class.
@@ -231,7 +231,7 @@ class ADC1Cal(machine.ADC):
 
         Parameters:
             adc_width (int): ADC.WIDTH_9BIT / ADC.WIDTH_10BIT / BITADC.WIDTH_11BIT / ADC.WIDTH_12BIT
-        """        
+        """
         assert (
             adc_width >= 0 and adc_width < 4
         ), "Expecting ADC_WIDTH9 (0), ADC_WIDTH10 (1), ADC_WIDTH11 (2), or ADC_WIDTH12 (3)"
@@ -379,7 +379,6 @@ class ADC1Cal(machine.ADC):
         voltage = voltage / self._div
 
         return voltage
-
 
     def __str__(self):
         _atten = ["0dB", "2.5dB", "6dB", "11dB"]
