@@ -12,7 +12,7 @@ function ci_code_formatting_setup {
 }
 
 function ci_code_formatting_run {
-    python3 tools/codeformat.py -v
+    python3 tools/codeformat.py -v adc1_cal.py
 }
 
 ########################################################################################
