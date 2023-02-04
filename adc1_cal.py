@@ -269,7 +269,8 @@ class ADC1Cal(machine.ADC):
         Returns:
             int: decoded value
         """
-        if (bits & ~(mask >> 1) & mask): # Check sign bit (MSB of mask)
+        # Check sign bit (MSB of mask)
+        if bits & ~(mask >> 1) & mask:
             # Negative
             if is_twos_compl:
                 # 2's complement
@@ -297,7 +298,7 @@ class ADC1Cal(machine.ADC):
         y2dist = ((i + 1) * _LUT_ADC_STEP_SIZE) + _LUT_LOW_THRESH - adc
         # (y - y1)
         y1dist = adc - ((i * _LUT_ADC_STEP_SIZE) + _LUT_LOW_THRESH)
-        
+
         # For points for bilinear interpolation
         # Lower bound point of _lut_adc1_low
         q11 = _lut_adc1_low[i]
@@ -355,7 +356,7 @@ class ADC1Cal(machine.ADC):
         raw_val <<= 3 - self._width
 
         # Check if in non-linear region
-        if self._atten == ADC.ATTN_11DB and raw_val >= _LUT_LOW_THRESH: 
+        if self._atten == ADC.ATTN_11DB and raw_val >= _LUT_LOW_THRESH:
             # Use lookup table to get voltage in non linear portion of ADC_ATTEN_DB_11
             lut_voltage = self.calculate_voltage_lut(raw_val)
             # If ADC is transitioning from linear region to non-linear region
@@ -363,10 +364,7 @@ class ADC1Cal(machine.ADC):
                 # Linearly interpolate between linear voltage and lut voltage
                 linear_voltage = self.calculate_voltage_linear(raw_val)
                 voltage = self.interpolate_two_points(
-                    linear_voltage,
-                    lut_voltage,
-                    _LUT_ADC_STEP_SIZE,
-                    (raw_val - _LUT_LOW_THRESH)
+                    linear_voltage, lut_voltage, _LUT_ADC_STEP_SIZE, (raw_val - _LUT_LOW_THRESH)
                 )
             else:
                 voltage = lut_voltage
@@ -382,15 +380,15 @@ class ADC1Cal(machine.ADC):
 
     def __str__(self):
         _atten = ["0dB", "2.5dB", "6dB", "11dB"]
-        if (self.name != ""):
+        if self.name != "":
             name_str = "Name: {} ".format(self.name)
         else:
             name_str = ""
 
         raw_val = self.read()
 
-        return ("{} width: {:2}, attenuation: {:>5}, raw value: {:4}, value: {}".format(
-            name_str, 9+self._width, _atten[self._atten], raw_val, self.voltage)
+        return "{} width: {:2}, attenuation: {:>5}, raw value: {:4}, value: {}".format(
+            name_str, 9+self._width, _atten[self._atten], raw_val, self.voltage
         )
 
 
