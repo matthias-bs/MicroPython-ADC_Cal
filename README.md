@@ -1,6 +1,5 @@
 [![formatting: lint](https://github.com/matthias-bs/MicroPython-ADC_Cal/actions/workflows/ci.yml/badge.svg)](https://github.com/matthias-bs/MicroPython-ADC_Cal/actions/workflows/ci.yml)
 [![GitHub release](https://img.shields.io/github/release/matthias-bs/MicroPython-ADC_Cal?maxAge=3600)](https://github.com/matthias-bs/MicroPython-ADC_Cal/releases)
-[![License: GPLv3](https://img.shields.io/badge/license-GPLv3-green)](https://github.com/matthias-bs/MicroPython-ADC_Cal/blob/main/LICENSE)
 
 # MicroPython-ADC_Cal
 **MicroPython ESP32 library for calibrated on-chip ADC conversion**
