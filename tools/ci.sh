@@ -29,6 +29,8 @@ function ci_build_packages_setup {
     python3 /tmp/micropython/tools/manifestfile.py --help
     pwd
     ls
+    ls /home/runner/work/MicroPython-ADC_Cal/
+    ls /home/runner/work
     ls tmp/micropython
     ls tmp/micropython/mpy-cross/
     ls tmp/micropython/mpy-cross/build
