@@ -27,6 +27,7 @@ function ci_build_packages_setup {
     # check the required programs run
     /tmp/micropython/mpy-cross/build/mpy-cross --version
     python3 /tmp/micropython/tools/manifestfile.py --help
+    tmp/micropython/mpy-cross/build/mpy-cross adc1_cal.py
 }
 
 function ci_build_packages_check_manifest {
