@@ -1,4 +1,4 @@
-[![formatting: lint](https://github.com/matthias-bs/MicroPython-ADC_Cal/actions/workflows/ci.yml/badge.svg)](https://github.com/matthias-bs/MicroPython-ADC_Cal/actions/workflows/ci.yml)
+[![formatting: lint](https://github.com/matthias-bs/MicroPython-ADC_Cal/actions/workflows/code-formatting.yml/badge.svg)](https://github.com/matthias-bs/MicroPython-ADC_Cal/actions/workflows/ci.yml)
 [![GitHub release](https://img.shields.io/github/release/matthias-bs/MicroPython-ADC_Cal?maxAge=3600)](https://github.com/matthias-bs/MicroPython-ADC_Cal/releases)
 
 # MicroPython-ADC_Cal
