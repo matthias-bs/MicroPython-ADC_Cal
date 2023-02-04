@@ -1,0 +1,16 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+    - name: Setup environment
+      run: source tools/ci.sh && ci_build_packages_setup
+    #- name: Check manifest files
+    #  run: source tools/ci.sh && ci_build_packages_check_manifest
+    #- name: Compile package index
+    #  run: source tools/ci.sh && ci_build_packages_compile_index
