@@ -212,7 +212,7 @@ class ADC1Cal(machine.ADC):
         self._atten   = None
         self.atten(ADC.ATTN_6DB)
         # fmt: on
-        
+
     def atten(self, attenuation):
         """
         Select attenuation of input signal
@@ -230,7 +230,7 @@ class ADC1Cal(machine.ADC):
         self._coeff_b = _ADC1_VREF_ATTEN_OFFSET[attenuation]
         self._atten   = attenuation
         # fmt: on
-        
+
     def width(self, adc_width):
         """
         Select bit width of conversion result
