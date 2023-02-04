@@ -46,7 +46,6 @@ EXCLUSIONS = []
 TOP = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 UNCRUSTIFY_CFG = os.path.join(TOP, "tools/uncrustify.cfg")
-print("UNCRUSTIFY_CFG: ", UNCRUSTIFY_CFG)
 
 C_EXTS = (
     ".c",
