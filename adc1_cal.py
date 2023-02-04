@@ -118,7 +118,7 @@ _LUT_VREF_HIGH          = const(1200)
 _LUT_ADC_STEP_SIZE      = const(64)
 _LUT_POINTS             = const(20)
 _LUT_LOW_THRESH         = const(2880)
-_LUT_HIGH_THRESH        = (_LUT_LOW_THRESH + _LUT_ADC_STEP_SIZE)
+_LUT_HIGH_THRESH        = _LUT_LOW_THRESH + _LUT_ADC_STEP_SIZE
 
 # 20 Point lookup tables, covering ADC readings from 2880 to 4096, step size of 64
 # LUT for VREF 1000mV
@@ -421,9 +421,9 @@ if __name__ == "__main__":
     ubatt = ADC1Cal(Pin(ADC_PIN, Pin.IN), DIV, None, AVERAGING, "ADC1 eFuse Calibrated")
 
     # Test all supported attenuation/width permutations
-    for attenuation in adc_atten:
+    for att in adc_atten:
         # set attenuation
-        ubatt.atten(attenuation)
+        ubatt.atten(att)
 
         for width in adc_widths:
             # set ADC result width
