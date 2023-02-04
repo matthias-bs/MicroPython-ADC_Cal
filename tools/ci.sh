@@ -27,6 +27,8 @@ function ci_build_packages_setup {
     # check the required programs run
     /tmp/micropython/mpy-cross/build/mpy-cross --version
     python3 /tmp/micropython/tools/manifestfile.py --help
+    pwd
+    ls
     ls tmp/micropython
     ls tmp/micropython/mpy-cross/
     ls tmp/micropython/mpy-cross/build
