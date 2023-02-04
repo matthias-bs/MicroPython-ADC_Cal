@@ -31,9 +31,9 @@ function ci_build_packages_setup {
     ls
     ls /home/runner/work/MicroPython-ADC_Cal/
     ls /home/runner/work
-    ls tmp/micropython
-    ls tmp/micropython/mpy-cross/
-    ls tmp/micropython/mpy-cross/build
+    ls /tmp/micropython
+    ls /tmp/micropython/mpy-cross/
+    ls /tmp/micropython/mpy-cross/build
     tmp/micropython/mpy-cross/build/mpy-cross adc1_cal.py
 }
 
