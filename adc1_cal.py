@@ -26,7 +26,7 @@
 # full scale value or LSB voltage, respectively.
 # The MicroPython quick reference [3] is also (IMHO) quite misleading.
 # A good glimpse is provided in [4].
-# 
+#
 # - "Per design the ADC reference voltage is 1100 mV, however the true
 #   reference voltage can range from 1000 mV to 1200 mV amongst different
 #   ESP32s." [1]
@@ -186,6 +186,7 @@ class ADC1Cal(machine.ADC):
         _coeff_a (float):   conversion function coefficient 'a'
         _coeff_b (float):   conversion function coefficient 'b'
     """
+    
     def __init__(self, pin, div, vref=None, samples=10, name=""):
         """
         The constructor for Battery class.
@@ -231,7 +232,9 @@ class ADC1Cal(machine.ADC):
         Parameters:
             adc_width (int): ADC.WIDTH_9BIT / ADC.WIDTH_10BIT / BITADC.WIDTH_11BIT / ADC.WIDTH_12BIT
         """        
-        assert (adc_width >= 0 and adc_width < 4), "Expecting ADC_WIDTH9 (0), ADC_WIDTH10 (1), ADC_WIDTH11 (2), or ADC_WIDTH12 (3)"
+        assert (
+            adc_width >= 0 and adc_width < 4
+        ), "Expecting ADC_WIDTH9 (0), ADC_WIDTH10 (1), ADC_WIDTH11 (2), or ADC_WIDTH12 (3)"
         super().width(adc_width)
         self._width = adc_width
 
@@ -388,7 +391,7 @@ class ADC1Cal(machine.ADC):
         raw_val = self.read()
 
         return "{} width: {:2}, attenuation: {:>5}, raw value: {:4}, value: {}".format(
-            name_str, 9+self._width, _atten[self._atten], raw_val, self.voltage
+            name_str, 9 + self._width, _atten[self._atten], raw_val, self.voltage
         )
 
 
