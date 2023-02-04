@@ -350,7 +350,7 @@ class ADC1Cal(machine.ADC):
         raw_val = 0
 
         # Read and accumulate ADC samples
-        for i in range(self._samples):
+        for _ in range(self._samples):
             raw_val += self.read()
 
         # Calculate average
