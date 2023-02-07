@@ -21,6 +21,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
         pip install micropython-stubber
+        pip install -U  micropython-esp32-stubs
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files 'adc1_cal.py')
