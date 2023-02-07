@@ -25,7 +25,8 @@ jobs:
         pwd
         ls -a
         ls -a /
-        find / -name micropython-esp32-stubs
+        find /opt -name micropython-esp32-stubs
+        find /tmp -name micropython-esp32-stubs
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files 'adc1_cal.py')
