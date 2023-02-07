@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.9"]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -25,6 +25,7 @@ jobs:
         pwd
         ls -a
         ls -a /
+        find / -name micropython-esp32-stubs
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files 'adc1_cal.py')
