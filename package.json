@@ -1,0 +1,7 @@
+{
+  "urls": [
+    ["adc1_cal.py", "github:matthias-bs/MicroPython-ADC_Cal/adc1_cal.py"]
+  ],
+  "version": "1.0.0",
+  "deps": []
+}
