@@ -1,4 +1,4 @@
-"Black" is used for MicroPython code style ckecking:
+"Black" is used for MicroPython code style checking:
 https://github.com/psf/black
 
 "uncrustify" is NOT used in this project, thus uncrustify.cfg wil not be used!
