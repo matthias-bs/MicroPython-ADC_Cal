@@ -95,32 +95,32 @@ from machine import ADC
 # fmt: off
 # Constant from
 # https://github.com/espressif/esp-idf/blob/master/components/soc/esp32/include/soc/soc.h
-_DR_REG_EFUSE_BASE      = const(0x3FF5A000)
+_DR_REG_EFUSE_BASE = const(0x3FF5A000)
 
 # Constants from
 # https://github.com/espressif/esp-idf/blob/master/components/soc/esp32/include/soc/efuse_reg.h
-_EFUSE_ADC_VREF         = const(0x0000001F)
-_EFUSE_BLK0_RDATA4_REG  = _DR_REG_EFUSE_BASE + 0x010
+_EFUSE_ADC_VREF = const(0x0000001F)
+_EFUSE_BLK0_RDATA4_REG = _DR_REG_EFUSE_BASE + 0x010
 
 # Constants from
 # esp_adc_cal_esp32.c
-_ADC_12_BIT_RES         = const(4096)
-_LIN_COEFF_A_SCALE      = const(65536)
+_ADC_12_BIT_RES = const(4096)
+_LIN_COEFF_A_SCALE = const(65536)
 # LIN_COEFF_A_SCALE/2
-_LIN_COEFF_A_ROUND      = const(32768)
-_ADC1_VREF_ATTEN_SCALE  = [57431, 76236, 105481, 196602]
+_LIN_COEFF_A_ROUND = const(32768)
+_ADC1_VREF_ATTEN_SCALE = [57431, 76236, 105481, 196602]
 _ADC1_VREF_ATTEN_OFFSET = [75, 78, 107, 142]
-_VREF_REG               = _EFUSE_BLK0_RDATA4_REG
-_VREF_OFFSET            = const(1100)
-_VREF_STEP_SIZE         = const(7)
-_VREF_FORMAT            = const(0)
-_VREF_MASK              = const(0x1F)
-_LUT_VREF_LOW           = const(1000)
-_LUT_VREF_HIGH          = const(1200)
-_LUT_ADC_STEP_SIZE      = const(64)
-_LUT_POINTS             = const(20)
-_LUT_LOW_THRESH         = const(2880)
-_LUT_HIGH_THRESH        = _LUT_LOW_THRESH + _LUT_ADC_STEP_SIZE
+_VREF_REG = _EFUSE_BLK0_RDATA4_REG
+_VREF_OFFSET = const(1100)
+_VREF_STEP_SIZE = const(7)
+_VREF_FORMAT = const(0)
+_VREF_MASK = const(0x1F)
+_LUT_VREF_LOW = const(1000)
+_LUT_VREF_HIGH = const(1200)
+_LUT_ADC_STEP_SIZE = const(64)
+_LUT_POINTS = const(20)
+_LUT_LOW_THRESH = const(2880)
+_LUT_HIGH_THRESH = _LUT_LOW_THRESH + _LUT_ADC_STEP_SIZE
 # fmt: on
 
 # 20 Point lookup tables, covering ADC readings from 2880 to 4096, step size of 64
