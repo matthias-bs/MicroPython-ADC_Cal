@@ -1,5 +1,5 @@
 metadata(
-    version="1.0.0",
+    version="1.0.1",
     description="MicroPython ESP32 library for calibrated on-chip ADC conversion",
     author="matthias-bs",
     license="MIT",
